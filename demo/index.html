@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MEdit Demo</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+	body
+	{
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+		padding: 2em;
+	}
+
+	td.showandhideable2:before
+	{
+		content: "▾ ";
+		font-size: 150%;
+	}
+
+	tbody.showandhideable2.closed { margin: 0; }
+
+	td.showandhideable2.closed:before
+	{
+		content: "▸ ";
+		font-size: 150%;
+	}
+
+	tbody.showandhideable2.closed + tbody { display: none; }
+
+	input[type=text]
+	{
+		padding: 0;
+		width: 50em;
+	}
+
+	table { border-collapse: collapse; }
+
+	#metadata-table td
+	{
+		vertical-align: top;
+		white-space: normal;
+		border: thin black solid;
+		padding: 0.5em 0.5em 0 0.5em;
+	}
+
+	#metadata-table tr { background-color: white; }
+	#metadata-table td[data-dup="1"] { background-color: #F2F2F2; }
+
+	#metadata-table td[data-dup="1"]::after
+	{
+		content: "＋";
+
+	}
+
+	#metadata-table input[type=text]
+	{
+		padding: 0;
+		width: 50em;
+	}
+
+	#metadata-table textarea { font-family: monospace; }
+
+</style>
+</head>
+<body>
+  <pre id="js-xml-default" style="display: none;">
+  &lt;md:EntityDescriptor xmlns:md=&quot;urn:oasis:names:tc:SAML:2.0:metadata&quot; entityID=&quot;https://cern.ch/login&quot;&gt;
+  &lt;md:Extensions&gt;
+    &lt;mdattr:EntityAttributes xmlns:mdattr=&quot;urn:oasis:names:tc:SAML:metadata:attribute&quot;&gt;
+      &lt;saml:Attribute xmlns:saml=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; Name=&quot;http://macedir.org/entity-category-support&quot;&gt;
+        &lt;saml:AttributeValue&gt;http://refeds.org/category/research-and-scholarship&lt;/saml:AttributeValue&gt;
+        &lt;saml:AttributeValue&gt;http://www.geant.net/uri/dataprotection-code-of-conduct/v1&lt;/saml:AttributeValue&gt;
+      &lt;/saml:Attribute&gt;
+      &lt;saml:Attribute xmlns:saml=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; Name=&quot;http://macedir.org/entity-category&quot;&gt;
+        &lt;saml:AttributeValue&gt;http://refeds.org/category/research-and-scholarship&lt;/saml:AttributeValue&gt;
+      &lt;/saml:Attribute&gt;
+      &lt;saml:Attribute xmlns:saml=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; Name=&quot;urn:oid:2.16.756.1.2.5.1.1.4&quot; FriendlyName=&quot;swissEduPersonHomeOrganization&quot;&gt;
+        &lt;saml:AttributeValue&gt;cern.ch&lt;/saml:AttributeValue&gt;
+      &lt;/saml:Attribute&gt;
+      &lt;saml:Attribute xmlns:saml=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; Name=&quot;urn:oid:2.16.756.1.2.5.1.1.5&quot; FriendlyName=&quot;swissEduPersonHomeOrganizationType&quot;&gt;
+        &lt;saml:AttributeValue&gt;others&lt;/saml:AttributeValue&gt;
+      &lt;/saml:Attribute&gt;
+      &lt;saml:Attribute xmlns:saml=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; Name=&quot;urn:oasis:names:tc:SAML:attribute:assurance-certification&quot;&gt;
+        &lt;saml:AttributeValue&gt;https://refeds.org/sirtfi&lt;/saml:AttributeValue&gt;
+      &lt;/saml:Attribute&gt;
+    &lt;/mdattr:EntityAttributes&gt;
+    &lt;mdrpi:RegistrationInfo xmlns:mdrpi=&quot;urn:oasis:names:tc:SAML:metadata:rpi&quot; registrationInstant=&quot;2014-07-29T13:17:52Z&quot; registrationAuthority=&quot;http://rr.aai.switch.ch/&quot;&gt;
+      &lt;mdrpi:RegistrationPolicy xml:lang=&quot;en&quot;&gt;https://www.switch.ch/aai/federation/switchaai/metadata-registration-practice-statement-20110711.txt&lt;/mdrpi:RegistrationPolicy&gt;
+    &lt;/mdrpi:RegistrationInfo&gt;
+  &lt;/md:Extensions&gt;
+  &lt;md:SPSSODescriptor protocolSupportEnumeration=&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot;&gt;
+    &lt;md:Extensions&gt;
+      &lt;mdui:UIInfo xmlns:mdui=&quot;urn:oasis:names:tc:SAML:metadata:ui&quot;&gt;
+        &lt;mdui:Description xml:lang=&quot;en&quot;&gt;CERN Service Provider Proxy&lt;/mdui:Description&gt;
+        &lt;mdui:DisplayName xml:lang=&quot;en&quot;&gt;CERN Service Provider Proxy&lt;/mdui:DisplayName&gt;
+        &lt;mdui:InformationURL xml:lang=&quot;en&quot;&gt;http://www.cern.ch&lt;/mdui:InformationURL&gt;
+        &lt;mdui:PrivacyStatementURL xml:lang=&quot;en&quot;&gt;https://dataprotection.web.cern.ch/dataprotection/home/en/privacy_statement.shtml&lt;/mdui:PrivacyStatementURL&gt;
+        &lt;mdui:Logo height=&quot;16&quot; width=&quot;16&quot;&gt;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVR42pVT21HDQAx0B5RACSkB25N/SqAEPs+ZfFACJaSElOAPrHwxQwmUkBKMdk+S5YRk4GYuj9NqT7vSNY2tbfl8aMvptRtk1D3/dTO5Kx+bbpi+mVzkGWT9Xh7bMr0bcMRZkxZyeIYPJPeDHDxYKwGhkeK7yLkd5C0IlJgEOATIAyBS8Fe3Oz1leUY2I1b/R/kK1rJ5M8gM0FwsVNUXORqeO0pZdMk537zSrOeUqt64LysCApz1JoHMRjCGZy7BAOMtAvNqbnfTC36HoTQNTt8h4K2Qp3G0Fl7Ak9QyLQ0GeWvSouNaJeMmk2Q6B8sQ8UADTgSgbpJbzIlXBmb3OXmqL/c79z37cNWprMmGJN4DNNeRrlNJbJrIMGnlOCqx0fXtmtmxO92K5DDpt46k4ftX8vKQ8Lgq5geGpVRM3R4TeQAAAABJRU5ErkJggg==&lt;/mdui:Logo&gt;
+        &lt;mdui:Logo height=&quot;60&quot; width=&quot;60&quot;&gt;data:image/png;base64,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&lt;/mdui:Logo&gt;
+      &lt;/mdui:UIInfo&gt;
+    &lt;/md:Extensions&gt;
+    &lt;md:KeyDescriptor&gt;
+      &lt;ds:KeyInfo xmlns:ds=&quot;http://www.w3.org/2000/09/xmldsig#&quot;&gt;
+        &lt;ds:X509Data&gt;
+          &lt;ds:X509Certificate&gt;
+MIIIEjCCBfqgAwIBAgIKLYgjvQAAAAAAMDANBgkqhkiG9w0BAQsFADBRMRIwEAYK
+CZImiZPyLGQBGRYCY2gxFDASBgoJkiaJk/IsZAEZFgRjZXJuMSUwIwYDVQQDExxD
+RVJOIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTEzMTEwODA4Mzg1NVoXDTIz
+MDcyOTA5MTkzOFowVjESMBAGCgmSJomT8ixkARkWAmNoMRQwEgYKCZImiZPyLGQB
+GRYEY2VybjESMBAGA1UECxMJY29tcHV0ZXJzMRYwFAYDVQQDEw1sb2dpbi5jZXJu
+LmNoMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp6t1C0SGlLddL2M+
+ltffGioTnDT3eztOxlA9bAGuvB8/Rjym8en6+ET9boM02CyoR5Vpn8iElXVWccAE
+xPIQEq70D6LPe86vb+tYhuKPeLfuICN9Z0SMQ4f+57vk61Co1/uw/8kPvXlyd+Ai
+8Dsn/G0hpH67bBI9VOQKfpJqclcSJuSlUB5PJffvMUpr29B0eRx8LKFnIHbDILSu
+6nVbFLcadtWIjbYvoKorXg3J6urtkz+zEDeYMTvA6ZGOFf/Xy5eGtroSq9csSC97
+6tx+umKEPhXBA9AcpiCV9Cj5axN03Aaa+iTE36jpnjcd9d02dy5Q9jE2nUN6KXnB
+6qF6eQIDAQABo4ID5TCCA+EwPQYJKwYBBAGCNxUHBDAwLgYmKwYBBAGCNxUIg73Q
+CYLtjQ2G7Ysrgd71N4WA0GIehd2yb4Wu9TkCAWQCARkwHQYDVR0lBBYwFAYIKwYB
+BQUHAwIGCCsGAQUFBwMBMA4GA1UdDwEB/wQEAwIFoDBoBgNVHSAEYTBfMF0GCisG
+AQQBYAoEAQEwTzBNBggrBgEFBQcCARZBaHR0cDovL2NhLWRvY3MuY2Vybi5jaC9j
+YS1kb2NzL2NwLWNwcy9jZXJuLXRydXN0ZWQtY2EyLWNwLWNwcy5wZGYwJwYJKwYB
+BAGCNxUKBBowGDAKBggrBgEFBQcDAjAKBggrBgEFBQcDATAdBgNVHQ4EFgQUqtJc
+wUXasyM6sRaO5nCMFoFDenMwGAYDVR0RBBEwD4INbG9naW4uY2Vybi5jaDAfBgNV
+HSMEGDAWgBQdkBnqyM7MPI0UsUzZ7BTiYUADYTCCASoGA1UdHwSCASEwggEdMIIB
+GaCCARWgggERhkdodHRwOi8vY2FmaWxlcy5jZXJuLmNoL2NhZmlsZXMvY3JsL0NF
+Uk4lMjBDZXJ0aWZpY2F0aW9uJTIwQXV0aG9yaXR5LmNybIaBxWxkYXA6Ly8vQ049
+Q0VSTiUyMENlcnRpZmljYXRpb24lMjBBdXRob3JpdHksQ049Q0VSTlBLSTA3LENO
+PUNEUCxDTj1QdWJsaWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1D
+b25maWd1cmF0aW9uLERDPWNlcm4sREM9Y2g/Y2VydGlmaWNhdGVSZXZvY2F0aW9u
+TGlzdD9iYXNlP29iamVjdENsYXNzPWNSTERpc3RyaWJ1dGlvblBvaW50MIIBVAYI
+KwYBBQUHAQEEggFGMIIBQjBcBggrBgEFBQcwAoZQaHR0cDovL2NhZmlsZXMuY2Vy
+bi5jaC9jYWZpbGVzL2NlcnRpZmljYXRlcy9DRVJOJTIwQ2VydGlmaWNhdGlvbiUy
+MEF1dGhvcml0eS5jcnQwgbsGCCsGAQUFBzAChoGubGRhcDovLy9DTj1DRVJOJTIw
+Q2VydGlmaWNhdGlvbiUyMEF1dGhvcml0eSxDTj1BSUEsQ049UHVibGljJTIwS2V5
+JTIwU2VydmljZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1jZXJu
+LERDPWNoP2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0
+aW9uQXV0aG9yaXR5MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jZXJuLmNoL29j
+c3AwDQYJKoZIhvcNAQELBQADggIBAGKZ3bknTCfNuh4TMaL3PuvBFjU8LQ5NKY9G
+LZvY2ibYMRk5Is6eWRgyUsy1UJRQdaQQPnnysqrGq8VRw/NIFotBBsA978/+jj7v
+4e5Kr4o8HvwAQNLBxNmF6XkDytpLL701FcNEGRqIsoIhNzihi2VBADLC9HxljEyP
+T52IR767TMk/+xTOqClceq3sq6WRD4m+xaWRUJyOhn+Pqr+wbhXIw4wzHC6X0hcL
+j8P9Povtm6VmKkN9JPuymMo/0+zSrUt2+TYfmbbEKYJSP0+sceQ76IKxxmSdKAr1
+qDNE8v+c3DvPM2PKmfivwaV2l44FdP8ulzqTgphkYcN1daa9Oc+qJeyu/eL7xWzk
+6Zq5R+jVrMlM0p1y2XczI7Hoc96TMOcbVnwgMcVqRM9p57VItn6XubYPR0C33i1y
+UZjkWbIfqEjq6Vev6lVgngOyzu+hqC/8SDyORA3dlF9aZOD13kPZdF/JRphHREQt
+aRydAiYRlE/WHTvOcY52jujDftUR6oY0eWaWkwSHbX+kDFx8IlR8UtQCUgkGHBGw
+nOYLIGu7SRDGSfOBOiVhxKoHWVk/pL6eKY2SkmyOmmgO4JnQGg95qeAOMG/EQZt/
+2x8GAavUqGvYy9dPFwFf08678hQqkjNSuex7UD0ku8OP1QKvpP44l6vZhFc6A5Xq
+jdU9lus1
+          &lt;/ds:X509Certificate&gt;
+        &lt;/ds:X509Data&gt;
+      &lt;/ds:KeyInfo&gt;
+    &lt;/md:KeyDescriptor&gt;
+    &lt;md:SingleLogoutService Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect&quot; Location=&quot;https://login.cern.ch/adfs/ls/&quot;/&gt;
+    &lt;md:SingleLogoutService Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&quot; Location=&quot;https://login.cern.ch/adfs/ls/&quot;/&gt;
+    &lt;md:NameIDFormat&gt;urn:oasis:names:tc:SAML:2.0:nameid-format:transient&lt;/md:NameIDFormat&gt;
+    &lt;md:AssertionConsumerService Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&quot; index=&quot;0&quot; Location=&quot;https://login.cern.ch/adfs/ls/&quot;/&gt;
+    &lt;md:AssertionConsumerService Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact&quot; index=&quot;1&quot; Location=&quot;https://login.cern.ch/adfs/ls/&quot;/&gt;
+    &lt;md:AttributeConsumingService index=&quot;1&quot;&gt;
+      &lt;md:ServiceName xml:lang=&quot;en&quot;&gt;CERN Service Provider Proxy&lt;/md:ServiceName&gt;
+      &lt;md:ServiceDescription xml:lang=&quot;en&quot;&gt;CERN Service Provider Proxy&lt;/md:ServiceDescription&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;email&quot; Name=&quot;urn:oid:0.9.2342.19200300.100.1.3&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;swissEduPersonHomeOrganization&quot; Name=&quot;urn:oid:2.16.756.1.2.5.1.1.4&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;swissEduPersonHomeOrganizationType&quot; Name=&quot;urn:oid:2.16.756.1.2.5.1.1.5&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;eduPersonAffiliation&quot; Name=&quot;urn:oid:1.3.6.1.4.1.5923.1.1.1.1&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;swissEduPersonUniqueID&quot; Name=&quot;urn:oid:2.16.756.1.2.5.1.1.1&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;surname&quot; Name=&quot;urn:oid:2.5.4.4&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;givenName&quot; Name=&quot;urn:oid:2.5.4.42&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;eduPersonPrincipalName&quot; Name=&quot;urn:oid:1.3.6.1.4.1.5923.1.1.1.6&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;eduPersonTargetedID&quot; Name=&quot;urn:oid:1.3.6.1.4.1.5923.1.1.1.10&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;eduPersonScopedAffiliation&quot; Name=&quot;urn:oid:1.3.6.1.4.1.5923.1.1.1.9&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;displayName&quot; Name=&quot;urn:oid:2.16.840.1.113730.3.1.241&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;commonName&quot; Name=&quot;urn:oid:2.5.4.3&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;schacHomeOrganization&quot; Name=&quot;urn:oid:1.3.6.1.4.1.25178.1.2.9&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+      &lt;md:RequestedAttribute FriendlyName=&quot;schacHomeOrganizationType&quot; Name=&quot;urn:oid:1.3.6.1.4.1.25178.1.2.10&quot; NameFormat=&quot;urn:oasis:names:tc:SAML:2.0:attrname-format:uri&quot; isRequired=&quot;true&quot;/&gt;
+    &lt;/md:AttributeConsumingService&gt;
+  &lt;/md:SPSSODescriptor&gt;
+  &lt;md:IDPSSODescriptor protocolSupportEnumeration=&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot;&gt;
+    &lt;md:Extensions&gt;
+      &lt;shibmd:Scope xmlns:shibmd=&quot;urn:mace:shibboleth:metadata:1.0&quot; regexp=&quot;false&quot;&gt;cern.ch
+      &lt;/shibmd:Scope&gt;
+      &lt;mdui:DiscoHints xmlns:mdui=&quot;urn:oasis:names:tc:SAML:metadata:ui&quot;&gt;
+        &lt;mdui:IPHint&gt;128.141.0.0/16&lt;/mdui:IPHint&gt;
+        &lt;mdui:DomainHint&gt;cern.ch&lt;/mdui:DomainHint&gt;
+        &lt;mdui:GeolocationHint&gt;geo:46.23304,6.05528&lt;/mdui:GeolocationHint&gt;
+      &lt;/mdui:DiscoHints&gt;
+      &lt;mdui:UIInfo xmlns:mdui=&quot;urn:oasis:names:tc:SAML:metadata:ui&quot;&gt;
+        &lt;mdui:Description xml:lang=&quot;en&quot;&gt;CERN Identity Provider&lt;/mdui:Description&gt;
+        &lt;mdui:DisplayName xml:lang=&quot;en&quot;&gt;CERN&lt;/mdui:DisplayName&gt;
+        &lt;mdui:InformationURL xml:lang=&quot;en&quot;&gt;http://www.cern.ch&lt;/mdui:InformationURL&gt;
+        &lt;mdui:Logo height=&quot;16&quot; width=&quot;16&quot;&gt;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABPElEQVR42pVT21HDQAx0B5RACSkB25N/SqAEPs+ZfFACJaSElOAPrHwxQwmUkBKMdk+S5YRk4GYuj9NqT7vSNY2tbfl8aMvptRtk1D3/dTO5Kx+bbpi+mVzkGWT9Xh7bMr0bcMRZkxZyeIYPJPeDHDxYKwGhkeK7yLkd5C0IlJgEOATIAyBS8Fe3Oz1leUY2I1b/R/kK1rJ5M8gM0FwsVNUXORqeO0pZdMk537zSrOeUqt64LysCApz1JoHMRjCGZy7BAOMtAvNqbnfTC36HoTQNTt8h4K2Qp3G0Fl7Ak9QyLQ0GeWvSouNaJeMmk2Q6B8sQ8UADTgSgbpJbzIlXBmb3OXmqL/c79z37cNWprMmGJN4DNNeRrlNJbJrIMGnlOCqx0fXtmtmxO92K5DDpt46k4ftX8vKQ8Lgq5geGpVRM3R4TeQAAAABJRU5ErkJggg==&lt;/mdui:Logo&gt;
+        &lt;mdui:Logo height=&quot;60&quot; width=&quot;60&quot;&gt;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAIAAAC1nk4lAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAACC9JREFUeNrsmk1MVFcUxxHF1EEqCR8pWNCkGaGatg6JjdUGSRq6GBa0iY26qEmLi0ZrohtoUk1MYAMbm/iRLqCLdlH7kTYsYFG6ABRjJWG6EANM0iBEsQ4aCIgNNKa/945c3rzvNzwbTXyZmJnLfff+77n/8z/nnuu63Z/8mPW8PdlZz+HzAvQL0C7PuhDH2hjJ2Vaez5ep6YWp6YfPIuiqyqKqiuJYZdG2snzgPtOWBt/B2m3xvVtKCnMxZ3/iTveV8an7aXaNluVHy/P3xTbzvS9xu3tgfGgk5T4s/fN8r3xNIJ0+Ur/jQG2UL10D4z/0JD05wG7E926t27t1aDTV0TnsCT1k0Ni19fM92KOj8+alnrH5hSX/c/BuQ/12oLPO9s7hQO/aPmtfjX3k2Qms7V++x2Qnz17+/frk4tLjQHPwIixKjKaO7n8Tzly78Xcg3Kw2LzcH5w7A6erY5tbje+DDV9//6X8yrFtSGMFTjY3NHYM0wvhA2gIhu9K9Yp2njU837OKdlo5BPxPQnzmqKooAzc/kxMzco5V1QhIx/NDolq4rt/oTt32Ombw041c9EIqLjTVDo/f8IMbnGup3ABegcBfP44vtDtCnuqqU3cPeeAgWCVPysPHcwmKzF2JwnGrYBRSAHmvrdZcIgHbxGRhnQ/Ii608c2on5W74ZdHorqkersQl/lobKfADhzmP6yNo84Vp3BnIfbes9Ur/9QmMNJkdYrN1EvE0YHHOPE4fe6vIKCvg1u0z4OHymJ6gGs4FYGjFpOncV+mFvtsuGohvW+02YQMOms3p3xKeWfTQD6eUVqA9J8BwGYdkswIqbZAbW+QKNo+DansLErD5VxfYhSIGYxYvOQBVb3L4szUAwFUlyf1OUezWBTQ86twW04GZAflbrSYs8rxRGrLazcURJdEwiykCSdqKA0FdlofLMLSwxJb6lWvB34QwgjKImLyoH6B+6g2kl9xJDkDbi2R823pPX+VNixAc9ouk04ucvbfED70fBwdCIMdMwMS5PMkTMo0WsRYsu1cUnDu78ta1O4gudlS0FBN3Uzz7dNNWxUtUiu0ciGUyntQi0rIsSXxhacRdjSIjm+5Ocs9PA8t+SbBFk7Tn/QcnyzgpNxd6miIM56VNdtRn3MDmopGXIf4dFCm0snbchR6kBRgK3ibsuDjr/aFHTYD3lmFseBLgme6eNdn8BZCYHlamDWVqxEClNLrPTRssP7pSI9c6nP6kW+YL6KqPKLhntbRtrFNGZrk93UHJDazh0jIhGlFGDw5kexNXU0t55kwg3Njlj8mMjbnvQFcXG8ATx6hprZAesJsu2TQ/Eh0QrJDn0q2KPFpvOX0V/OOOY/gRu/NsJd7R8k/EnCwArSmK7ydm2JDO+zIaqU5YsgCxHfdeOt/pHnQ5Zc7Melq2kbDo3YE39cCFe4UVTO9vF4vnXH+jphzGD4mIhHBEHv9BUwwe24N1zWk6cohGN4yPhgBYxDNygD2EVJ6ZREYy/EvZMzJEjnK5Iucb2hB4N/Dri3emFfYaYJN5jdaBjrb0uLUpwTN3AjY8a/U+t1vZEk7DLw2wsDY9Zoov/hfiwRQDlw6TGgKrcyW/uIV5sZWSdXgwIG3Sp6FpyYtbWTLbQ7bM89kvCiol88XfDBI1p4bEQT7N0eoiRTNp4CPcALU5gSgCgXUlBJETQeLA6SkoEMRqb9EaCvH9LP5Fno0cb9Xv1T52WbK3kFfOSJxqMTVJqq3fOoHVtx9jGWCBDmNwl4/oqYm86zjF+mqXL8hMORzjHM6KWN4+mWLqKbZKEVKerYWbPRT07NeVhQFSWZktZQJ9DYcQRNOk5DG5Jj22MYsx9M3vYPQA1nR8whWgsDVbxfmaBjbaVE3dLpxiCgYyJZbeeTGfMEOEbQ2Fj6+lddlLSWtxJpDBYsUYWyn5hbGIkkxHbmYxGzetHeoMiVnVXKRPb9sFGWCQvkkNnpz4eVdMtJS9XVRZrxxNNmGYPxysx0sWfbxRseomk6sHsP4GKiM2f7QYKQ31hCOOmp7Qwd8drBWxIcnKm27lc5nZRRGaDpYVk/XpFhrFaj+/RkpuCXJ98YJ0cMdEKDcrEDImeS38JMXik+znfrZYnwkfyJEELwpDrSKFRyofQjj6sxBQC4ACCRZYnBBXVlxTPvawjIWbq/kP3bh6lXuaDysYUD5QQGmPj4KSmTucDvZ57T3O40RRUpsUTsVzTSG7tXmTzAI3wsbMtWYO2p5t5ve5Ibm264zFeyX17ppaefhBLWVkLDpVFLl6Y5Xn5iTDDRVuNw4rAvdBYg3l08698FGIpxIDYSXFVSAexHHnoaT3FBLtzWVx6DKb1OWuv3bhr56l3NKbufwORgdkmPQEx77ojxiKoysfxyp7rkyfPXma6xX8fI1PdA7dcdsb7oujW3TnGSjrkLsN/PQB67dtlRHuMmpyclck8EQP3cPx10cHTX//xXfeItLPyI1ocSDGvE6Q1Yf1/D7aYgC9BQZSOqGQ9pGlkqyhGWORER2frBR8nUSlGZuiI/h85R0p9H99lSk4McmjAXzdGtIyeZEZdILV3DtPflgPodMw1UwjzQl+HlaupjV7ikAJVtHyTIAZKQtfQMeeSlVJruQf7P0DL3YBihbtsuQcHU6EsmOQFRQzQDK7YrIHJtnwTMmhCg5xEVnk3sJKmTs64JMDZoSA21bBX/0CMp2jpp4FYLG0tlIUDWhCTuYeLWBWMnIydOWjCBOmbnq8OPI2KmWROYYKWuxg/KXLmDEkvg6wWtCD2kyKv1hcdiqD/CTAAuHBP9rdH3GwAAAAASUVORK5CYII=&lt;/mdui:Logo&gt;
+      &lt;/mdui:UIInfo&gt;
+    &lt;/md:Extensions&gt;
+    &lt;md:KeyDescriptor use=&quot;signing&quot;&gt;
+      &lt;ds:KeyInfo xmlns:ds=&quot;http://www.w3.org/2000/09/xmldsig#&quot;&gt;
+        &lt;ds:X509Data&gt;
+          &lt;ds:X509Certificate&gt;
+MIIIEjCCBfqgAwIBAgIKLYgjvQAAAAAAMDANBgkqhkiG9w0BAQsFADBRMRIwEAYK
+CZImiZPyLGQBGRYCY2gxFDASBgoJkiaJk/IsZAEZFgRjZXJuMSUwIwYDVQQDExxD
+RVJOIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTEzMTEwODA4Mzg1NVoXDTIz
+MDcyOTA5MTkzOFowVjESMBAGCgmSJomT8ixkARkWAmNoMRQwEgYKCZImiZPyLGQB
+GRYEY2VybjESMBAGA1UECxMJY29tcHV0ZXJzMRYwFAYDVQQDEw1sb2dpbi5jZXJu
+LmNoMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp6t1C0SGlLddL2M+
+ltffGioTnDT3eztOxlA9bAGuvB8/Rjym8en6+ET9boM02CyoR5Vpn8iElXVWccAE
+xPIQEq70D6LPe86vb+tYhuKPeLfuICN9Z0SMQ4f+57vk61Co1/uw/8kPvXlyd+Ai
+8Dsn/G0hpH67bBI9VOQKfpJqclcSJuSlUB5PJffvMUpr29B0eRx8LKFnIHbDILSu
+6nVbFLcadtWIjbYvoKorXg3J6urtkz+zEDeYMTvA6ZGOFf/Xy5eGtroSq9csSC97
+6tx+umKEPhXBA9AcpiCV9Cj5axN03Aaa+iTE36jpnjcd9d02dy5Q9jE2nUN6KXnB
+6qF6eQIDAQABo4ID5TCCA+EwPQYJKwYBBAGCNxUHBDAwLgYmKwYBBAGCNxUIg73Q
+CYLtjQ2G7Ysrgd71N4WA0GIehd2yb4Wu9TkCAWQCARkwHQYDVR0lBBYwFAYIKwYB
+BQUHAwIGCCsGAQUFBwMBMA4GA1UdDwEB/wQEAwIFoDBoBgNVHSAEYTBfMF0GCisG
+AQQBYAoEAQEwTzBNBggrBgEFBQcCARZBaHR0cDovL2NhLWRvY3MuY2Vybi5jaC9j
+YS1kb2NzL2NwLWNwcy9jZXJuLXRydXN0ZWQtY2EyLWNwLWNwcy5wZGYwJwYJKwYB
+BAGCNxUKBBowGDAKBggrBgEFBQcDAjAKBggrBgEFBQcDATAdBgNVHQ4EFgQUqtJc
+wUXasyM6sRaO5nCMFoFDenMwGAYDVR0RBBEwD4INbG9naW4uY2Vybi5jaDAfBgNV
+HSMEGDAWgBQdkBnqyM7MPI0UsUzZ7BTiYUADYTCCASoGA1UdHwSCASEwggEdMIIB
+GaCCARWgggERhkdodHRwOi8vY2FmaWxlcy5jZXJuLmNoL2NhZmlsZXMvY3JsL0NF
+Uk4lMjBDZXJ0aWZpY2F0aW9uJTIwQXV0aG9yaXR5LmNybIaBxWxkYXA6Ly8vQ049
+Q0VSTiUyMENlcnRpZmljYXRpb24lMjBBdXRob3JpdHksQ049Q0VSTlBLSTA3LENO
+PUNEUCxDTj1QdWJsaWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1D
+b25maWd1cmF0aW9uLERDPWNlcm4sREM9Y2g/Y2VydGlmaWNhdGVSZXZvY2F0aW9u
+TGlzdD9iYXNlP29iamVjdENsYXNzPWNSTERpc3RyaWJ1dGlvblBvaW50MIIBVAYI
+KwYBBQUHAQEEggFGMIIBQjBcBggrBgEFBQcwAoZQaHR0cDovL2NhZmlsZXMuY2Vy
+bi5jaC9jYWZpbGVzL2NlcnRpZmljYXRlcy9DRVJOJTIwQ2VydGlmaWNhdGlvbiUy
+MEF1dGhvcml0eS5jcnQwgbsGCCsGAQUFBzAChoGubGRhcDovLy9DTj1DRVJOJTIw
+Q2VydGlmaWNhdGlvbiUyMEF1dGhvcml0eSxDTj1BSUEsQ049UHVibGljJTIwS2V5
+JTIwU2VydmljZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1jZXJu
+LERDPWNoP2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0
+aW9uQXV0aG9yaXR5MCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jZXJuLmNoL29j
+c3AwDQYJKoZIhvcNAQELBQADggIBAGKZ3bknTCfNuh4TMaL3PuvBFjU8LQ5NKY9G
+LZvY2ibYMRk5Is6eWRgyUsy1UJRQdaQQPnnysqrGq8VRw/NIFotBBsA978/+jj7v
+4e5Kr4o8HvwAQNLBxNmF6XkDytpLL701FcNEGRqIsoIhNzihi2VBADLC9HxljEyP
+T52IR767TMk/+xTOqClceq3sq6WRD4m+xaWRUJyOhn+Pqr+wbhXIw4wzHC6X0hcL
+j8P9Povtm6VmKkN9JPuymMo/0+zSrUt2+TYfmbbEKYJSP0+sceQ76IKxxmSdKAr1
+qDNE8v+c3DvPM2PKmfivwaV2l44FdP8ulzqTgphkYcN1daa9Oc+qJeyu/eL7xWzk
+6Zq5R+jVrMlM0p1y2XczI7Hoc96TMOcbVnwgMcVqRM9p57VItn6XubYPR0C33i1y
+UZjkWbIfqEjq6Vev6lVgngOyzu+hqC/8SDyORA3dlF9aZOD13kPZdF/JRphHREQt
+aRydAiYRlE/WHTvOcY52jujDftUR6oY0eWaWkwSHbX+kDFx8IlR8UtQCUgkGHBGw
+nOYLIGu7SRDGSfOBOiVhxKoHWVk/pL6eKY2SkmyOmmgO4JnQGg95qeAOMG/EQZt/
+2x8GAavUqGvYy9dPFwFf08678hQqkjNSuex7UD0ku8OP1QKvpP44l6vZhFc6A5Xq
+jdU9lus1
+          &lt;/ds:X509Certificate&gt;
+        &lt;/ds:X509Data&gt;
+      &lt;/ds:KeyInfo&gt;
+    &lt;/md:KeyDescriptor&gt;
+    &lt;md:SingleLogoutService Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect&quot; Location=&quot;https://login.cern.ch/adfs/ls/&quot;/&gt;
+    &lt;md:SingleLogoutService Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&quot; Location=&quot;https://login.cern.ch/adfs/ls/&quot;/&gt;
+    &lt;md:NameIDFormat&gt;urn:oasis:names:tc:SAML:2.0:nameid-format:transient&lt;/md:NameIDFormat&gt;
+    &lt;md:NameIDFormat&gt;urn:oasis:names:tc:SAML:2.0:nameid-format:persistent&lt;/md:NameIDFormat&gt;
+    &lt;md:SingleSignOnService Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect&quot; Location=&quot;https://login.cern.ch/adfs/ls/&quot;/&gt;
+    &lt;md:SingleSignOnService Binding=&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&quot; Location=&quot;https://login.cern.ch/adfs/ls/&quot;/&gt;
+  &lt;/md:IDPSSODescriptor&gt;
+  &lt;md:Organization&gt;
+    &lt;md:OrganizationName xml:lang=&quot;en&quot;&gt;cern.ch&lt;/md:OrganizationName&gt;
+    &lt;md:OrganizationDisplayName xml:lang=&quot;en&quot;&gt;CERN&lt;/md:OrganizationDisplayName&gt;
+    &lt;md:OrganizationURL xml:lang=&quot;en&quot;&gt;http://www.cern.ch/&lt;/md:OrganizationURL&gt;
+  &lt;/md:Organization&gt;
+  &lt;md:ContactPerson contactType=&quot;support&quot;&gt;
+    &lt;md:GivenName&gt;CERN&lt;/md:GivenName&gt;
+    &lt;md:SurName&gt;Service Desk&lt;/md:SurName&gt;
+    &lt;md:EmailAddress&gt;mailto:service-desk@cern.ch&lt;/md:EmailAddress&gt;
+    &lt;md:EmailAddress/&gt;
+  &lt;/md:ContactPerson&gt;
+  &lt;md:ContactPerson contactType=&quot;technical&quot;&gt;
+    &lt;md:GivenName&gt;CERN&lt;/md:GivenName&gt;
+    &lt;md:SurName&gt;Service Desk&lt;/md:SurName&gt;
+    &lt;md:EmailAddress&gt;mailto:service-desk@cern.ch&lt;/md:EmailAddress&gt;
+    &lt;md:EmailAddress/&gt;
+  &lt;/md:ContactPerson&gt;
+  &lt;md:ContactPerson contactType=&quot;other&quot;&gt;
+    &lt;md:GivenName&gt;CERN Computer Security&lt;/md:GivenName&gt;
+    &lt;md:EmailAddress&gt;mailto:computer.security@cern.ch&lt;/md:EmailAddress&gt;
+    &lt;md:EmailAddress&gt;mailto:Romain.Wartel@cern.ch&lt;/md:EmailAddress&gt;
+  &lt;/md:ContactPerson&gt;
+&lt;/md:EntityDescriptor&gt;
+</pre>
+  <h1>MEdit (Metadata Editor) demo</h1>
+  <div>Paste some XML text here or use the default XML data</div>
+  <textarea id="js-xml-data" name="xml-data" rows="10" style="width: 100%;"></textarea>
+
+  <h2>Metadata (editor)</h2>
+  <div id="metadata-table">Processing...</div>
+
+  <div id="template-table" style="display: none;"></div>
+
+  <script src="lodash.min.js"></script>
+  <script src="../medit.js"></script>
+  <script>
+var $ = document.querySelector.bind(document);
+
+$('#js-xml-data').addEventListener('paste', function(e) {
+    $('#metadata-table').textContent = '';
+    $('#template-table').textContent = '';
+    var xml = e.clipboardData.getData("text/plain");
+
+    medit(
+        xml,
+        '#metadata-table',
+        '#template-table',
+        resolver,
+        bindings,
+        pairings,
+        mappings,
+        prefixes,
+        '#js-xml-data'
+    );
+});
+
+function bindings(name, type, value) {
+    switch (type) {
+//         case 'bool':
+//             var checked = value === 'true' ? 'checked' : '';
+//             return `<input type="checkbox" name="${name}" value="true" ${checked}>`;
+//         case 'lang':
+//             var da = value === 'da' ? 'checked': '';
+//             var en = value === 'en' ? 'checked': '';
+//             return `en <input type="radio" name="${name}" value="en" ${en}> da<input type="radio" name="${name}" value="da" ${da}>`;
+        case 'attrnameformat':
+        case 'binding':
+        case 'bool':
+        case 'contacttype':
+        case 'lang':
+            return `<input type="text" list="${type}" name="${name}" value="${value}">`;
+        case 'cert':
+            var val = value.replace(/[\s\n\r]/g, '').match(/.{0,64}/g).join("\n");
+            return `<textarea name="${name}" cols="64" rows="30">${val}</textarea>`;
+    }
+}
+
+function pairings(flat) {
+    return;
+    if (flat['SP/AttributeConsumingService:#:RequestedAttribute:#:Name']) {
+        _.each(flat['SP/AttributeConsumingService:#:RequestedAttribute:#:Name'], function(val, key) {
+            key = key.replace(/(.+)\//, ':$1:' ).replace(/:Name/, ':FriendlyName');
+            var sibling = document.querySelector('#tabular input[name="'+key+'"]');
+            sibling.value = 'anton banton';
+            sibling.dispatchEvent(new Event('blur'));
+        });
+    }
+}
+
+var mappings = [
+    { key: 'entityid', path: '@entityID', roles: [] },
+    { key: 'ID', path: '@ID', roles: [] },
+    { key: 'EntityAttribute:#:NameFormat', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/@NameFormat', roles: [], values: 'attrnameformat' },
+    { key: 'EntityAttribute:#:Name', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/@Name', roles: [] },
+    { key: 'EntityAttribute:#:FriendlyName', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/@FriendlyName', roles: [] },
+    { key: 'EntityAttribute:#:Value:#', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/saml:AttributeValue[#]', roles: [] },
+    { key: 'RegistrationInstant', path: 'md:Extensions/mdrpi:RegistrationInfo/@registrationInstant', roles: [] },
+    { key: 'RegistrationAuthority', path: 'md:Extensions/mdrpi:RegistrationInfo/@registrationAuthority', roles: [] },
+    { key: 'RegistrationPolicy:#', path: 'md:Extensions/mdrpi:RegistrationInfo/mdrpi:RegistrationPolicy[#]', roles: [] },
+    { key: 'RegistrationPolicy:#:lang', path: 'md:Extensions/mdrpi:RegistrationInfo/mdrpi:RegistrationPolicy[#]/@xml:lang', roles: [], values: 'lang' },
+    { key: 'DigestMethod:#', path: 'md:Extensions/algsupport:DigestMethod[#]', roles: [] },
+    { key: 'DigestMethod:#:Algorithm', path: 'md:Extensions/algsupport:DigestMethod[#]/@Algorithm', roles: [] },
+    { key: 'SigningMethod:#', path: 'md:Extensions/algsupport:SigningMethod[#]', roles: [] },
+    { key: 'SigningMethod:#:Algorithm', path: 'md:Extensions/algsupport:SigningMethod[#]/@Algorithm', roles: [] },
+    { key: 'active', path: '', roles: [] },
+    { key: 'assertion.encryption', path: '', roles: [] },
+    { key: 'AttributeNameFormat', path: '', roles: [] },
+    { key: 'base64attributes', path: '', roles: [] },
+    { key: 'certData.encryption', path: '', roles: [] },
+    { key: 'certData.signing', path: '', roles: [] },
+    { key: 'certificate', path: '', roles: [] },
+    { key: 'certFingerprint:#', path: '', roles: [] },
+    { key: 'consent.disable:#', path: '', roles: [] },
+    { key: 'eduGAIN', path: '', roles: [] },
+    { key: 'eid', path: '', roles: [] },
+    { key: 'env', path: '', roles: [] },
+    { key: 'federation:#', path: '', roles: [] },
+    { key: 'feds:#', path: '', roles: [] },
+    { key: 'icon', path: '', roles: [] },
+    { key: 'IDPList:#', path: '', roles: [] },
+    { key: 'incognito', path: '', roles: [] },
+    { key: 'kalmar', path: '', roles: [] },
+    { key: 'modified', path: '', roles: [] },
+    { key: 'nicknames', path: '', roles: [] },
+    { key: 'redirect.sign', path: '', roles: [] },
+    { key: 'redirect.validate', path: '', roles: [] },
+    { key: 'RegistrationInstant2', path: '', roles: [] },
+    { key: 'saml20.sign.response', path: '', roles: [] },
+    { key: 'signresponse', path: '', roles: [] },
+    { key: 'simplesaml.attributes', path: '', roles: [] },
+    { key: 'spNameQualifier', path: '', roles: [] },
+    { key: 'type', path: '', roles: [] },
+    { key: 'url:#', path: '', roles: [] },
+    { key: 'url:#:lang', path: 'md:Extensions/wayf:wayf/wayf:url[#]/@xml:lang', roles: ['wayf'] },
+    { key: 'wayf_access_accept:#', path: '', roles: [] },
+    { key: 'wayf_access_deny:#', path: '', roles: [] },
+    { key: 'wayf_schacHomeOrganization', path: '', roles: [] },
+    { key: 'wayf_schacHomeOrganizationType', path: '', roles: [] },
+    { key: 'protocolSupportEnumeration', path: '@protocolSupportEnumeration', roles: ['sp', 'idp'] },
+    { key: 'scope:#', path: 'md:Extensions/shibmd:Scope[#]', roles: ['idp'] },
+    { key: 'scope:#:regexp', path: 'md:Extensions/shibmd:Scope[#]/@regexp', roles: ['idp'] },
+    { key: 'IPHint:#', path: 'md:Extensions/mdui:DiscoHints/mdui:IPHint[#]', roles: ['idp'] },
+    { key: 'DomainHint:#', path: 'md:Extensions/mdui:DiscoHints/mdui:DomainHint[#]', roles: ['idp'] },
+    { key: 'GeolocationHint:#', path: 'md:Extensions/mdui:DiscoHints/mdui:GeolocationHint[#]', roles: ['idp'] },
+    { key: 'UIInfoDescription:#', path: 'md:Extensions/mdui:UIInfo/mdui:Description[#]', roles: ['sp', 'idp'] },
+    { key: 'UIInfoDescription:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:Description[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'UIInfoDisplayName:#', path: 'md:Extensions/mdui:UIInfo/mdui:DisplayName[#]', roles: ['sp', 'idp'] },
+    { key: 'UIInfoDisplayName:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:DisplayName[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'UIInfoInformationURL:#', path: 'md:Extensions/mdui:UIInfo/mdui:InformationURL[#]', roles: ['sp', 'idp'] },
+    { key: 'UIInfoInformationURL:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:InformationURL[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'UIInfoPrivacyStatementURL:#', path: 'md:Extensions/mdui:UIInfo/mdui:PrivacyStatementURL[#]', roles: ['sp', 'idp'] },
+    { key: 'UIInfoPrivacyStatementURL:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:PrivacyStatementURL[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'UIInfoKeywords:#', path: 'md:Extensions/mdui:UIInfo/mdui:Keywords[#]', roles: ['sp', 'idp'] },
+    { key: 'UIInfoKeywords:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:Keywords[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'Logo:#', path: 'md:Extensions/mdui:UIInfo/mdui:Logo[#]', roles: ['sp', 'idp'] },
+    { key: 'Logo:#:height', path: 'md:Extensions/mdui:UIInfo/mdui:Logo[#]/@height', roles: ['sp', 'idp'] },
+    { key: 'Logo:#:width', path: 'md:Extensions/mdui:UIInfo/mdui:Logo[#]/@width', roles: ['sp', 'idp'] },
+    { key: 'RequestInitiator:#:Location', path: 'md:Extensions/init:RequestInitiator[#]/@Location', roles: ['sp'] },
+    { key: 'RequestInitiator:#:Binding', path: 'md:Extensions/init:RequestInitiator[#]/@Binding', roles: ['sp'] },
+    { key: 'DiscoveryResponse:#:Location', path: 'md:Extensions/idpdisc:DiscoveryResponse[#]/@Location', roles: ['sp'] },
+    { key: 'DiscoveryResponse:#:Binding', path: 'md:Extensions/idpdisc:DiscoveryResponse[#]/@Binding', roles: ['sp'] },
+    { key: 'DiscoveryResponse:#:index', path: 'md:Extensions/idpdisc:DiscoveryResponse[#]/@index', roles: ['sp'] },
+    { key: 'KeyDescriptor:#:KeyName', path: 'md:KeyDescriptor[#]/ds:KeyInfo/ds:KeyName', roles: ['sp', 'idp'] },
+    { key: 'KeyDescriptor:#:X509SubjectName', path: 'md:KeyDescriptor[#]/ds:KeyInfo/ds:X509Data/ds:X509SubjectName', roles: ['sp', 'idp'] },
+    { key: 'KeyDescriptor:#', path: 'md:KeyDescriptor[#]/ds:KeyInfo/ds:X509Data/ds:X509Certificate', roles: ['sp', 'idp'], values: 'cert' },
+    { key: 'KeyDescriptor:#:use', path: 'md:KeyDescriptor[#]/@use', roles: ['sp', 'idp'] },
+    { key: 'KeyDescriptor:#:EncryptionMethod:#:Algorithm', path: 'md:KeyDescriptor[#]/md:EncryptionMethod[#]/@Algorithm', roles: ['sp', 'idp'] },
+    { key: 'AuthnRequestsSigned', path: '@AuthnRequestsSigned', roles: ['sp'] },
+    { key: 'WantAssertionsSigned', path: '@WantAssertionsSigned', roles: ['sp'] },
+    { key: 'ArtifactResolutionService:#:Binding', path: 'md:ArtifactResolutionService[#]/@Binding', roles: ['sp'] },
+    { key: 'ArtifactResolutionService:#:index', path: 'md:ArtifactResolutionService[#]/@index', roles: ['sp'] },
+    { key: 'ArtifactResolutionService:#:Location', path: 'md:ArtifactResolutionService[#]/@Location', roles: ['sp'] },
+    { key: 'SingleLogoutService:#:Binding', path: 'md:SingleLogoutService[#]/@Binding', roles: ['sp', 'idp'] },
+    { key: 'SingleLogoutService:#:Location', path: 'md:SingleLogoutService[#]/@Location', roles: ['sp', 'idp'] },
+    { key: 'NameIDFormat:#', path: 'md:NameIDFormat[#]', roles: ['sp', 'idp'] },
+    { key: 'SingleSignOnService:#:Binding', path: 'md:SingleSignOnService[#]/@Binding', roles: ['idp'] },
+    { key: 'SingleSignOnService:#:Location', path: 'md:SingleSignOnService[#]/@Location', roles: ['idp'] },
+    { key: 'AssertionConsumerService:#:Binding', path: 'md:AssertionConsumerService[#]/@Binding', roles: ['sp'], values: 'binding' },
+    { key: 'AssertionConsumerService:#:index', path: 'md:AssertionConsumerService[#]/@index', roles: ['sp'] },
+    { key: 'AssertionConsumerService:#:Location', path: 'md:AssertionConsumerService[#]/@Location', roles: ['sp'] },
+    { key: 'AssertionConsumerService:#:isDefault', path: 'md:AssertionConsumerService[#]/@isDefault', roles: ['sp'], values: 'bool' },
+    { key: 'AttributeService:#:Location', path: 'md:AttributeService[#]/@Location', roles: ['aa'] },
+    { key: 'AttributeService:#:Binding', path: 'md:AttributeService[#]/@Binding', roles: ['aa'] },
+    { key: 'ManageNameIDService:#:Location', path: 'md:ManageNameIDService[#]/@Location', roles: ['sp', 'idp'] },
+    { key: 'ManageNameIDService:#:Binding', path: 'md:ManageNameIDService[#]/@Binding', roles: ['sp', 'idp'] },
+    { key: 'AttributeConsumingService:#:index', path: 'md:AttributeConsumingService[#]/@index', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:isDefault', path: 'md:AttributeConsumingService[#]/@isDefault', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:ServiceName:#', path: 'md:AttributeConsumingService[#]/md:ServiceName[#]', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:ServiceName:#:lang', path: 'md:AttributeConsumingService[#]/md:ServiceName[#]/@xml:lang', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:ServiceDescription:#', path: 'md:AttributeConsumingService[#]/md:ServiceDescription[#]', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:ServiceDescription:#:lang', path: 'md:AttributeConsumingService[#]/md:ServiceDescription[#]/@xml:lang', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:RequestedAttribute:#:FriendlyName', path: 'md:AttributeConsumingService[#]/md:RequestedAttribute[#]/@FriendlyName', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:RequestedAttribute:#:Name', path: 'md:AttributeConsumingService[#]/md:RequestedAttribute[#]/@Name', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:RequestedAttribute:#:NameFormat', path: 'md:AttributeConsumingService[#]/md:RequestedAttribute[#]/@NameFormat', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:RequestedAttribute:#:isRequired', path: 'md:AttributeConsumingService[#]/md:RequestedAttribute[#]/@isRequired', roles: ['sp'], values: 'bool'},
+    { key: 'OrganizationName:#', path: 'md:Organization/md:OrganizationName[#]', roles: [] },
+    { key: 'OrganizationName:#:lang', path: 'md:Organization/md:OrganizationName[#]/@xml:lang', roles: [] },
+    { key: 'OrganizationDisplayName:#', path: 'md:Organization/md:OrganizationDisplayName[#]', roles: [] },
+    { key: 'OrganizationDisplayName:#:lang', path: 'md:Organization/md:OrganizationDisplayName[#]/@xml:lang', roles: [] },
+    { key: 'OrganizationURL:#', path: 'md:Organization/md:OrganizationURL[#]', roles: [] },
+    { key: 'OrganizationURL:#:lang', path: 'md:Organization/md:OrganizationURL[#]/@xml:lang', roles: [] },
+    { key: 'contacts:#:contactType', path: 'md:ContactPerson[#]/@contactType', roles: [], values: 'contacttype'},
+    { key: 'contacts:#:company:#', path: 'md:ContactPerson[#]/md:Company[#]', roles: [] },
+    { key: 'contacts:#:givenName:#', path: 'md:ContactPerson[#]/md:GivenName[#]', roles: [] },
+    { key: 'contacts:#:surName:#', path: 'md:ContactPerson[#]/md:SurName[#]', roles: [] },
+    { key: 'contacts:#:emailAddress:#', path: 'md:ContactPerson[#]/md:EmailAddress[#]', roles: [] },
+    { key: 'contacts:#:telephoneNumber:#', path: 'md:ContactPerson[#]/md:TelephoneNumber[#]', roles: [] },
+];
+
+var prefixes = [
+    { prefix: 'WAYF', path: '' , title: 'WAYF specific data' },
+    { prefix: 'C', path: '', title: 'Entity Common Data' },
+    { prefix: 'SP', path: 'md:SPSSODescriptor', title: 'SP Role Data' },
+    { prefix: 'IDP', path: 'md:IDPSSODescriptor', title: 'IdP Role Data' },
+    { prefix: 'AA', path: 'md:AttributeAuthorityDescriptor', title: 'AA Role Data'},
+];
+
+function resolver(ns) {
+    var names = {
+        'samlp': 'urn:oasis:names:tc:SAML:2.0:protocol',
+        'saml': 'urn:oasis:names:tc:SAML:2.0:assertion',
+        'shibmd': 'urn:mace:shibboleth:metadata:1.0',
+        'md': 'urn:oasis:names:tc:SAML:2.0:metadata',
+        'mdrpi': 'urn:oasis:names:tc:SAML:metadata:rpi',
+        'mdui': 'urn:oasis:names:tc:SAML:metadata:ui',
+        'mdattr': 'urn:oasis:names:tc:SAML:metadata:attribute',
+        'idpdisc': 'urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol',
+        'init': 'urn:oasis:names:tc:SAML:profiles:SSO:request-init',
+        'xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+        'xs': 'http://www.w3.org/2001/XMLSchema',
+        'xsl': 'http://www.w3.org/1999/XSL/Transform',
+        'xml': 'http://www.w3.org/XML/1998/namespace',
+        'SOAP-ENV': 'http://schemas.xmlsoap.org/soap/envelope/',
+        'ds': 'http://www.w3.org/2000/09/xmldsig#',
+        'xenc': 'http://www.w3.org/2001/04/xmlenc#',
+        'algsupport': 'urn:oasis:names:tc:SAML:metadata:algsupport',
+        'ukfedlabel': 'http://ukfederation.org.uk/2006/11/label',
+        'sdss': 'http://sdss.ac.uk/2006/06/WAYF',
+        'wayf': 'http://wayf.dk/2014/08/wayf',
+        'corto': 'http://corto.wayf.dk',
+    };
+
+    return names[ns] || null;
+}
+
+medit(
+    '#js-xml-default',
+    '#metadata-table',
+    '#template-table',
+    resolver,
+    bindings,
+    pairings,
+    mappings,
+    prefixes,
+    '#js-xml-data'
+);
+</script>
+</body>
+</html>
