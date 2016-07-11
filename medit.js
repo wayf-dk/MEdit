@@ -9,6 +9,8 @@
 
 window.medit = function(xmlData, table, template, resolver, bindings, pairings, mappings, prefixes, xmlDisplay) {
     var xmlMetadata;
+    var focus;
+
     if (_.isString(xmlData)) {
       if (xmlData[0] === '#' || xmlData[0] === '.') {
           xmlMetadata = document.querySelector(xmlData).textContent;
@@ -29,39 +31,8 @@ window.medit = function(xmlData, table, template, resolver, bindings, pairings, 
 * vkiryukhin @ gmail.com
 * http://www.eslinstructor.net/vkbeautify/
 */
-function createShiftArr(step) {
-
-	var space = '    ';
-
-	if ( isNaN(parseInt(step)) ) {  // argument is string
-		space = step;
-	} else { // argument is integer
-		switch(step) {
-			case 1: space = ' '; break;
-			case 2: space = '  '; break;
-			case 3: space = '   '; break;
-			case 4: space = '    '; break;
-			case 5: space = '     '; break;
-			case 6: space = '      '; break;
-			case 7: space = '       '; break;
-			case 8: space = '        '; break;
-			case 9: space = '         '; break;
-			case 10: space = '          '; break;
-			case 11: space = '           '; break;
-			case 12: space = '            '; break;
-		}
-	}
-
-	var shift = ['\n']; // array of shifts
-	for(ix=0;ix<100;ix++){
-		shift.push(shift[ix]+space);
-	}
-	return shift;
-}
-
 function vkbeautify(){
 	this.step = '\t'; // 4 spaces
-	this.shift = createShiftArr(this.step);
 };
 
 vkbeautify.prototype.xml = function(text,step) {
@@ -75,8 +46,9 @@ vkbeautify.prototype.xml = function(text,step) {
 		inComment = false,
 		deep = 0,
 		str = '',
-		ix = 0,
-		shift = step ? createShiftArr(step) : this.shift;
+		ix = 0;
+
+    console.log('ar', ar);
 
 		for(ix=0;ix<len;ix++) {
 			// start comment or <![CDATA[...]]> or <!DOCTYPE //
@@ -101,23 +73,23 @@ vkbeautify.prototype.xml = function(text,step) {
 			} else
 			 // <elm> //
 			if(ar[ix].search(/<\w/) > -1 && ar[ix].search(/<\//) == -1 && ar[ix].search(/\/>/) == -1 ) {
-				str = !inComment ? str += shift[deep++]+ar[ix] : str += ar[ix];
+				str = !inComment ? str += "\n" +_.repeat(step, deep++)+ar[ix] : str += ar[ix];
 			} else
 			 // <elm>...</elm> //
 			if(ar[ix].search(/<\w/) > -1 && ar[ix].search(/<\//) > -1) {
-				str = !inComment ? str += step+ar[ix] : str += ar[ix];
+				str = !inComment ? str += "\n" +_.repeat(step, deep)+ar[ix] : str += ar[ix];
 			} else
 			// </elm> //
 			if(ar[ix].search(/<\//) > -1) {
-				str = !inComment ? str += shift[--deep]+ar[ix] : str += ar[ix];
+				str = !inComment ? str += "\n" +_.repeat(step, --deep)+ar[ix] : str += ar[ix];
 			} else
 			// <elm/> //
 			if(ar[ix].search(/\/>/) > -1 ) {
-				str = !inComment ? str += step+ar[ix] : str += ar[ix];
+				str = !inComment ? str += "\n" +_.repeat(step, deep)+ar[ix] : str += ar[ix];
 			} else
 			// <? xml ... ?> //
 			if(ar[ix].search(/<\?/) > -1) {
-				str += step+ar[ix];
+				str += "\n" +_.repeat(step, deep)+ar[ix];
 			} else
 			// xmlns //
   			if( ar[ix].search(/xmlns\:/) > -1  || ar[ix].search(/xmlns\=/) > -1) {
@@ -136,7 +108,7 @@ vkbeautify.prototype.xml = function(text,step) {
     return vk.xml;
     })()
 
-    var flatten = function (xp, context, defaultxpath, prefixes, mappings) {
+    function flatten(xp, context, defaultxpath, prefixes, mappings) {
 
         var flat = {};
 
@@ -196,7 +168,7 @@ vkbeautify.prototype.xml = function(text,step) {
         } while (multi && repeat > 0);
     }
 
-    var flat2hierarchial = function (flat) {
+    function flat2hierarchial(flat) {
         var obj = {};
 
         // This is like Object.entries but that requires a polyfill
@@ -221,7 +193,7 @@ vkbeautify.prototype.xml = function(text,step) {
         return obj;
     };
 
-    var tabulize = function (data, level, path, dlevel) {
+    function tabulize (data, level, path, dlevel) {
         var rowspan = 0;
         var duplication = false;
         var ret = [];
@@ -255,7 +227,7 @@ vkbeautify.prototype.xml = function(text,step) {
     };
 
     // hierachize ie. convert a flat data array to a DOM context
-    var hierarchize = function (data, xp, context, defaultxpath, prefixes, xmap) {
+    function hierarchize(data, xp, context, defaultxpath, prefixes, xmap) {
         _.each(xmap, function(query) {
             var superkey = query.key;
             query = query.path;
@@ -289,7 +261,7 @@ vkbeautify.prototype.xml = function(text,step) {
     };
 
     // Helper for hierarchizing multiple entities from flat to xmlDoc
-    var f2xhandlerepeatingvalues = function (key, q, val, xp, context, keyoffset) {
+    function f2xhandlerepeatingvalues(key, q, val, xp, context, keyoffset) {
         if (q.indexOf('#') >= 0) {
             var re = /(\d+)/g;
             re.lastIndex = keyoffset;
@@ -310,7 +282,7 @@ vkbeautify.prototype.xml = function(text,step) {
         query(xp, context, q, val, false);
     };
 
-    var hierarchialWithDefaults = function (defaults, data, prev) {
+    function hierarchialWithDefaults(defaults, data, prev) {
 
         _.each(defaults, function(v, k) {
 
@@ -336,7 +308,7 @@ vkbeautify.prototype.xml = function(text,step) {
         });
     };
 
-    var query = function query (xp, context, query, rec, before) {
+    function query (xp, context, query, rec, before) {
         // query always starts with / ie. is always 'absolute' in relation to the context
         // split in path elements, an element might include an attribute expression incl. value eg.
         // /md:EntitiesDescriptor/md:EntityDescriptor[@entityID="https://wayf.wayf.dk"]/md:SPSSODescriptor
@@ -387,7 +359,7 @@ vkbeautify.prototype.xml = function(text,step) {
                 }
                 if (attribute) {
                     // check for existence of attribute before setting - otherwise its already set value might be overwritten by undefined
-                    if (!context.getAttribute(attribute) && rec != undefined) {
+                    if (!context.getAttribute(attribute) && rec != undefined && rec != '') {
                         context.setAttribute(attribute, value);
                     }
                     if (value == undefined) { newcontext = context.getAttributeNode(attribute); }
@@ -453,7 +425,6 @@ vkbeautify.prototype.xml = function(text,step) {
                     var rec = _.find(mappings, { 'key': superkey});
                     if (rec.values) {
                         tds += '>'+bindings(col.path, rec.values, col.val)+'</td>';
-
                     } else {
                         tds += '><input type="text" name="'+col.path+'" value="'+col.val+'"/></td>';
                     }
@@ -482,19 +453,67 @@ vkbeautify.prototype.xml = function(text,step) {
         };
     }
 
+    function deepdelete(obj) {
+        var somethingdeleted = false;
+        function inner(obj, k) {
+            var empty = true;
+            _.each(obj, function(value, key, obj) {
+                if (_.isArray(value) || _.isObject(value)) {
+                    var e = inner(value, k + ':' + key);
+                    if (e) {
+                        //console.log('del', value, k + ':' + key, obj);
+                        delete(obj[key]);
+                        somethingdeleted = true;
+                    }
+                    empty &= e;
+                } else {
+                    empty &= value === '';
+                }
+            });
+            return empty;
+        }
+        inner(obj, '');
+        return somethingdeleted;
+    }
+
+    function hierarchial2flat(hierachial) {
+        var flat = {};
+        function doit(h, key) {
+            var index = 0;
+            _.each(h, function(val, key2) {
+                if (val == undefined) return;
+                if (Number.isInteger(key2)) {
+                    key2 = index++; // renumber indices - deleting an array entry does not remove the index
+                }
+                var key3 = key+':'+key2;
+
+                if (_.isArray(val) || _.isObject(val)) {
+                    doit(val, key3);
+                } else {
+                    var superkey = key3.replace(/^:(\w+):/, '$1/').replace(/:(\d+):/g, ':#:').replace(/:_?$/, '');
+                    _.set(flat, [superkey, key3], val);
+                }
+            });
+        }
+        doit(hierachial, '');
+        return flat;
+    }
 
     function updatexml(e) {
         // If there is not defined a path to any XML to update,
         // then do not bother creating a string representation of the XML
+        var rowIndex;
+
         if (!xmlDisplay) { return; }
 
         if (e) {
             if (e.target.oldValue === e.target.value) { return; }
+            var rowIndex = e.relatedTarget.parentNode.parentNode.rowIndex;
+
             var superkey = e.target.name.replace(/^:(\w+):/, '$1/').replace(/:(\d+):/g, ':#:').replace(/:_?$/, '');
             var key = e.target.name.replace(/^:(\w+):/, '$1/').replace(/:_?$/, '');
             var flat = {};
-            flat[superkey] = {};
-            flat[superkey][key] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+            _.set(flat, [superkey, key], e.target.value);
             pairings(flat);
 
             var xml = hierarchize(
@@ -516,6 +535,29 @@ vkbeautify.prototype.xml = function(text,step) {
             prefixes,
             mappings
         );
+
+        if (!e) {
+             hierachial = flat2hierarchial(flat);
+             hierarchialWithDefaults(defaults, hierachial, []);
+             document.querySelector(table).innerHTML = myprint_r3(tabulize(hierachial, 0, '', 0)[0]);
+             updateeventlisteners();
+        }
+/*
+        hierachial = flat2hierarchial(flat);
+        if (!e || (e.target.value === '' && deepdelete(hierachial))) { // update form if anything was deleted
+             hierarchialWithDefaults(defaults, hierachial, []);
+             document.querySelector(table).innerHTML = myprint_r3(tabulize(hierachial, 0, '', 0)[0]);
+             updateeventlisteners();
+             flat = hierarchial2flat(hierachial);
+             //console.log('deleted');
+        }
+
+        if (rowIndex) {
+            var rows = document.querySelectorAll(table + ' tr');
+            rows[rowIndex].lastChild.firstElementChild.focus();
+            rows[rowIndex].lastChild.firstElementChild.select();
+        }
+ */
 
         var ed = newXmlDoc.documentElement;
         while (ed.firstChild) { ed.removeChild(ed.firstChild); }
@@ -605,6 +647,8 @@ vkbeautify.prototype.xml = function(text,step) {
 
     function saveoldvalue() {
         this.oldValue = this.value;
+        focus = this;
+
     }
 
     function updateeventlisteners() {
@@ -632,10 +676,6 @@ vkbeautify.prototype.xml = function(text,step) {
         mappings
     );
 
-    updatexml();
-
-    hierachial = flat2hierarchial(flat);
-
     var defaults = mappings.reduce(function(acc, m) {
         if (m.path === '') { m.roles = ['wayf']; }
         if (m.roles.length === 0) { m.roles = ['c']; }
@@ -651,12 +691,9 @@ vkbeautify.prototype.xml = function(text,step) {
     defaults = flat2hierarchial(defaults);
     delete defaults.WAYF;
 
-    hierarchialWithDefaults(defaults, hierachial, []);
-
     document.querySelector(template).innerHTML = myprint_r3(tabulize(defaults, 0, '', 0)[0]);
-    document.querySelector(table).innerHTML = myprint_r3(tabulize(hierachial, 0, '', 0)[0]);
 
-    updateeventlisteners();
+    updatexml();
 
     _.each(document.querySelectorAll(table + ' td.showandhideable2'), function(node) {
         node.addEventListener('click', function(e) {
