@@ -10,3 +10,5 @@ It currently allows ‘live’ editing of metadata, but with some severe limitat
 It has value lists for fields with known permissible values eg. bindings, but is otherwise just a thin layer on top of the XML.
 
 We have published it in this early stage to get some feed-back on the approach and functionality - please use the issue tracker for that.
+
+Thanks to our student aide Lauritz Hilsøe who did the porting.
