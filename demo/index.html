@@ -292,6 +292,9 @@ jdU9lus1
   <option value="technical">
   <option value="other">
 </datalist>
+<datalist id="remdcontacttype">
+  <option value="http://refeds.org/metadata/contactType/security">
+</datalist>
 <datalist id="bool">
   <option value="true">
   <option value="false">
@@ -689,6 +692,7 @@ function bindings(name, type, value) {
         case 'binding':
         case 'bool':
         case 'contacttype':
+        case 'remdcontacttype':
         case 'lang':
         case 'nameidformat':
         case 'keyuse':
@@ -721,8 +725,8 @@ var mappings = [
     { key: 'entityid', path: '@entityID', roles: [] },
     { key: 'ID', path: '@ID', roles: [] },
     { key: 'EntityAttribute:#:NameFormat', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/@NameFormat', roles: [], values: 'attrnameformat' },
-    { key: 'EntityAttribute:#:Name', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/@Name', roles: [] },
-    { key: 'EntityAttribute:#:FriendlyName', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/@FriendlyName', roles: [] },
+    { key: 'EntityAttribute:#:Name', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/@Name', roles: [], values: 'attrname' },
+    { key: 'EntityAttribute:#:FriendlyName', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/@FriendlyName', roles: [], values: 'attrfriendlyname' },
     { key: 'EntityAttribute:#:Value:#', path: 'md:Extensions/mdattr:EntityAttributes/saml:Attribute[#]/saml:AttributeValue[#]', roles: [] },
     { key: 'RegistrationInstant', path: 'md:Extensions/mdrpi:RegistrationInfo/@registrationInstant', roles: [] },
     { key: 'RegistrationAuthority', path: 'md:Extensions/mdrpi:RegistrationInfo/@registrationAuthority', roles: [] },
@@ -761,7 +765,7 @@ var mappings = [
     { key: 'spNameQualifier', path: '', roles: [] },
     { key: 'type', path: '', roles: [] },
     { key: 'url:#', path: '', roles: [] },
-    { key: 'url:#:lang', path: 'md:Extensions/wayf:wayf/wayf:url[#]/@xml:lang', roles: ['wayf'] },
+    { key: 'url:#:lang', path: 'md:Extensions/wayf:wayf/wayf:url[#]/@xml:lang', roles: ['wayf'], values: 'lang' },
     { key: 'wayf_access_accept:#', path: '', roles: [] },
     { key: 'wayf_access_deny:#', path: '', roles: [] },
     { key: 'wayf_schacHomeOrganization', path: '', roles: [] },
@@ -773,15 +777,15 @@ var mappings = [
     { key: 'DomainHint:#', path: 'md:Extensions/mdui:DiscoHints/mdui:DomainHint[#]', roles: ['idp'] },
     { key: 'GeolocationHint:#', path: 'md:Extensions/mdui:DiscoHints/mdui:GeolocationHint[#]', roles: ['idp'] },
     { key: 'UIInfoDescription:#', path: 'md:Extensions/mdui:UIInfo/mdui:Description[#]', roles: ['sp', 'idp'] },
-    { key: 'UIInfoDescription:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:Description[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'UIInfoDescription:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:Description[#]/@xml:lang', roles: ['sp', 'idp'], values: 'lang' },
     { key: 'UIInfoDisplayName:#', path: 'md:Extensions/mdui:UIInfo/mdui:DisplayName[#]', roles: ['sp', 'idp'] },
-    { key: 'UIInfoDisplayName:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:DisplayName[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'UIInfoDisplayName:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:DisplayName[#]/@xml:lang', roles: ['sp', 'idp'], values: 'lang' },
     { key: 'UIInfoInformationURL:#', path: 'md:Extensions/mdui:UIInfo/mdui:InformationURL[#]', roles: ['sp', 'idp'] },
-    { key: 'UIInfoInformationURL:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:InformationURL[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'UIInfoInformationURL:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:InformationURL[#]/@xml:lang', roles: ['sp', 'idp'], values: 'lang' },
     { key: 'UIInfoPrivacyStatementURL:#', path: 'md:Extensions/mdui:UIInfo/mdui:PrivacyStatementURL[#]', roles: ['sp', 'idp'] },
-    { key: 'UIInfoPrivacyStatementURL:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:PrivacyStatementURL[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'UIInfoPrivacyStatementURL:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:PrivacyStatementURL[#]/@xml:lang', roles: ['sp', 'idp'], values: 'lang' },
     { key: 'UIInfoKeywords:#', path: 'md:Extensions/mdui:UIInfo/mdui:Keywords[#]', roles: ['sp', 'idp'] },
-    { key: 'UIInfoKeywords:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:Keywords[#]/@xml:lang', roles: ['sp', 'idp'] },
+    { key: 'UIInfoKeywords:#:lang', path: 'md:Extensions/mdui:UIInfo/mdui:Keywords[#]/@xml:lang', roles: ['sp', 'idp'], values: 'lang' },
     { key: 'Logo:#', path: 'md:Extensions/mdui:UIInfo/mdui:Logo[#]', roles: ['sp', 'idp'], values: 'logo' },
     { key: 'Logo:#:height', path: 'md:Extensions/mdui:UIInfo/mdui:Logo[#]/@height', roles: ['sp', 'idp'] },
     { key: 'Logo:#:width', path: 'md:Extensions/mdui:UIInfo/mdui:Logo[#]/@width', roles: ['sp', 'idp'] },
@@ -795,8 +799,8 @@ var mappings = [
     { key: 'KeyDescriptor:#', path: 'md:KeyDescriptor[#]/ds:KeyInfo/ds:X509Data/ds:X509Certificate', roles: ['sp', 'idp'], values: 'cert' },
     { key: 'KeyDescriptor:#:use', path: 'md:KeyDescriptor[#]/@use', roles: ['sp', 'idp'], values: 'keyuse' },
     { key: 'KeyDescriptor:#:EncryptionMethod:#:Algorithm', path: 'md:KeyDescriptor[#]/md:EncryptionMethod[#]/@Algorithm', roles: ['sp', 'idp'] },
-    { key: 'AuthnRequestsSigned', path: '@AuthnRequestsSigned', roles: ['sp'] },
-    { key: 'WantAssertionsSigned', path: '@WantAssertionsSigned', roles: ['sp'] },
+    { key: 'AuthnRequestsSigned', path: '@AuthnRequestsSigned', roles: ['sp'], values: 'bool' },
+    { key: 'WantAssertionsSigned', path: '@WantAssertionsSigned', roles: ['sp'], values: 'bool' },
     { key: 'ArtifactResolutionService:#:Binding', path: 'md:ArtifactResolutionService[#]/@Binding', roles: ['sp'], values: 'binding'  },
     { key: 'ArtifactResolutionService:#:index', path: 'md:ArtifactResolutionService[#]/@index', roles: ['sp'] },
     { key: 'ArtifactResolutionService:#:Location', path: 'md:ArtifactResolutionService[#]/@Location', roles: ['sp'] },
@@ -814,23 +818,23 @@ var mappings = [
     { key: 'ManageNameIDService:#:Location', path: 'md:ManageNameIDService[#]/@Location', roles: ['sp', 'idp'] },
     { key: 'ManageNameIDService:#:Binding', path: 'md:ManageNameIDService[#]/@Binding', roles: ['sp', 'idp'], values: 'binding'  },
     { key: 'AttributeConsumingService:#:index', path: 'md:AttributeConsumingService[#]/@index', roles: ['sp'] },
-    { key: 'AttributeConsumingService:#:isDefault', path: 'md:AttributeConsumingService[#]/@isDefault', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:isDefault', path: 'md:AttributeConsumingService[#]/@isDefault', roles: ['sp'], values: 'bool' },
     { key: 'AttributeConsumingService:#:ServiceName:#', path: 'md:AttributeConsumingService[#]/md:ServiceName[#]', roles: ['sp'] },
-    { key: 'AttributeConsumingService:#:ServiceName:#:lang', path: 'md:AttributeConsumingService[#]/md:ServiceName[#]/@xml:lang', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:ServiceName:#:lang', path: 'md:AttributeConsumingService[#]/md:ServiceName[#]/@xml:lang', roles: ['sp'], values: 'lang' },
     { key: 'AttributeConsumingService:#:ServiceDescription:#', path: 'md:AttributeConsumingService[#]/md:ServiceDescription[#]', roles: ['sp'] },
-    { key: 'AttributeConsumingService:#:ServiceDescription:#:lang', path: 'md:AttributeConsumingService[#]/md:ServiceDescription[#]/@xml:lang', roles: ['sp'] },
+    { key: 'AttributeConsumingService:#:ServiceDescription:#:lang', path: 'md:AttributeConsumingService[#]/md:ServiceDescription[#]/@xml:lang', roles: ['sp'], values: 'lang' },
     { key: 'AttributeConsumingService:#:RequestedAttribute:#:FriendlyName', path: 'md:AttributeConsumingService[#]/md:RequestedAttribute[#]/@FriendlyName', roles: ['sp'], values: 'attrfriendlyname' },
     { key: 'AttributeConsumingService:#:RequestedAttribute:#:Name', path: 'md:AttributeConsumingService[#]/md:RequestedAttribute[#]/@Name', roles: ['sp'], values: 'attrname' },
     { key: 'AttributeConsumingService:#:RequestedAttribute:#:NameFormat', path: 'md:AttributeConsumingService[#]/md:RequestedAttribute[#]/@NameFormat', roles: ['sp'], values: 'attrnameformat' },
     { key: 'AttributeConsumingService:#:RequestedAttribute:#:isRequired', path: 'md:AttributeConsumingService[#]/md:RequestedAttribute[#]/@isRequired', roles: ['sp'], values: 'bool'},
     { key: 'OrganizationName:#', path: 'md:Organization/md:OrganizationName[#]', roles: [] },
-    { key: 'OrganizationName:#:lang', path: 'md:Organization/md:OrganizationName[#]/@xml:lang', roles: [] },
+    { key: 'OrganizationName:#:lang', path: 'md:Organization/md:OrganizationName[#]/@xml:lang', roles: [], values: 'lang' },
     { key: 'OrganizationDisplayName:#', path: 'md:Organization/md:OrganizationDisplayName[#]', roles: [] },
-    { key: 'OrganizationDisplayName:#:lang', path: 'md:Organization/md:OrganizationDisplayName[#]/@xml:lang', roles: [] },
+    { key: 'OrganizationDisplayName:#:lang', path: 'md:Organization/md:OrganizationDisplayName[#]/@xml:lang', roles: [], values: 'lang' },
     { key: 'OrganizationURL:#', path: 'md:Organization/md:OrganizationURL[#]', roles: [] },
-    { key: 'OrganizationURL:#:lang', path: 'md:Organization/md:OrganizationURL[#]/@xml:lang', roles: [] },
+    { key: 'OrganizationURL:#:lang', path: 'md:Organization/md:OrganizationURL[#]/@xml:lang', roles: [], values: 'lang' },
     { key: 'contacts:#:contactType', path: 'md:ContactPerson[#]/@contactType', roles: [], values: 'contacttype'},
-    { key: 'contacts:#:remdContactType', path: 'md:ContactPerson[#]/@remd:contactType', roles: [] },
+    { key: 'contacts:#:remdContactType', path: 'md:ContactPerson[#]/@remd:contactType', roles: [], values: 'remdcontacttype'},
     { key: 'contacts:#:company', path: 'md:ContactPerson[#]/md:Company', roles: [] },
     { key: 'contacts:#:givenName', path: 'md:ContactPerson[#]/md:GivenName', roles: [] },
     { key: 'contacts:#:surName', path: 'md:ContactPerson[#]/md:SurName', roles: [] },
