@@ -48,8 +48,6 @@ vkbeautify.prototype.xml = function(text,step) {
 		str = '',
 		ix = 0;
 
-    console.log('ar', ar);
-
 		for(ix=0;ix<len;ix++) {
 			// start comment or <![CDATA[...]]> or <!DOCTYPE //
 			if(ar[ix].search(/<!/) > -1) {
